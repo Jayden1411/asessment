@@ -44,6 +44,7 @@ class TemporaryFileFactory
      * @param  string|null  $fileExtension
      * @return LocalTemporaryFile
      */
+     /*
     public function makeLocal(string $fileName = null, string $fileExtension = null): LocalTemporaryFile
     {
         if (!file_exists($this->temporaryPath) && !mkdir($concurrentDirectory = $this->temporaryPath) && !is_dir($concurrentDirectory)) {
@@ -54,7 +55,19 @@ class TemporaryFileFactory
             $this->temporaryPath . DIRECTORY_SEPARATOR . ($fileName ?: $this->generateFilename($fileExtension))
         );
     }
+    */
+       public function makeLocal(string $fileName = null, string $fileExtension = null): LocalTemporaryFile
+    {
+        // if (!file_exists($this->temporaryPath) && !mkdir($concurrentDirectory = $this->temporaryPath) && !is_dir($concurrentDirectory)) {
+        // new
+        if (!file_exists($this->temporaryPath) && !mkdir($concurrentDirectory = $this->temporaryPath, 0777, true) && !is_dir($concurrentDirectory)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+        }
 
+        return new LocalTemporaryFile(
+            $this->temporaryPath . DIRECTORY_SEPARATOR . ($fileName ?: $this->generateFilename($fileExtension))
+        );
+    }
     /**
      * @param  string|null  $fileExtension
      * @return RemoteTemporaryFile
